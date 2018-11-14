@@ -1,0 +1,108 @@
+#!/usr/bin/python3
+import datetime
+
+template='''
+===========================================================
+|                                                         |
+|                    JOURNAL OF PRESENCE                  |
+|                                                         |
+===========================================================
+
+| Company      | Year   | Period           |
+--------------------------------------------
+|              |        |                  |
+| Cryptzone AB | {year:>4}   | 16-{pmonth:<3} to 15-{cmonth:<3} |
+|              |        |                  |
+--------------------------------------------
+| Name                                     |
+--------------------------------------------
+|                                          |
+| {name:<41}|
+|                                          |
+--------------------------------------------
+| All presence | No of empl |
+-----------------------------
+|              |            |
+|      {all_presence:<1}       |  {employee_number:<4}      |
+|              |            |
+-----------------------------
+
+===========================================================
+|                                                         |
+|                   JOURNAL OF ABSENCE                    |
+|                                                         |
+===========================================================
+
+ Date                       Days        Reason
+-----------------------------------------------------------
+{absences}
+
+-----------------------------------------------------------
+Reasons of absence          |  Signature of Employee      |
+-----------------------------------------------------------
+A: Vacation                 |                             |
+B: Sickness                 |                             |
+C: Caring of a sick child   |                             |
+D: Absence without pay      |                             |
+E: Other reason             |                             |
+----------------------------|------------------------------
+                        | Signature of management leader  |
+                        |                                 |
+                        |                                 |
+                        |                                 |
+                        |                                 |
+                        |---------------------------------|
+'''
+
+months=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+
+absences = ''
+
+print('''
+A: Vacation
+B: Sickness
+C: Caring of a sick child
+D: Absence without pay
+E: Other reason
+''')
+
+while True:
+    from_ = input('From (dd/mm): ')
+    if not from_:
+        break
+    to = input('To (dd/mm): ')
+    reason = input('Reason: ')
+
+    fday, fmonth = [int(i) for i in from_.split('/')]
+    tday, tmonth = [int(i) for i in to.split('/')]
+    year = datetime.datetime.now().year
+
+    date_from = datetime.date(year, fmonth, fday)
+    date_to = datetime.date(year, tmonth, tday)
+
+    days = (date_to - date_from).days
+
+    absences += f'{year}/{fmonth}/{fday} to {year}/{tmonth}/{tday}    {days:<8}    {reason}\n'
+
+name = input('Full name: ')
+
+jop = template.format(
+    year=datetime.datetime.now().year,
+    cmonth=months[datetime.datetime.now().month - 1],
+    pmonth=months[datetime.datetime.now().month - 2],
+    employee_number='??',
+    all_presence = ' ' if absences else '✔',
+    name=name,
+    absences=absences,
+)
+
+jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.txt'
+with open(jopfile, 'wt') as f:
+    f.write(jop)
+print(jop)
+
+toprint = input('Do you want to print it? (y/N)')
+
+if toprint.lower().startswith('y'):
+    subprocess.check_call(['lpr', jopfile])
