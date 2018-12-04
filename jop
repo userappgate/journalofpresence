@@ -103,6 +103,9 @@ with open(jopfile, 'wt') as f:
     f.write(jop)
 print(jop)
 
+print('Signing journal of presence file…')
+subprocess.check_call(['gpg', '--armour', '--sign', jopfile])
+
 toprint = input('Do you want to print it? (y/N)')
 
 if toprint.lower().startswith('y'):
