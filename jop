@@ -82,7 +82,7 @@ while True:
     date_from = datetime.date(year, fmonth, fday)
     date_to = datetime.date(year, tmonth, tday)
 
-    days = (date_to - date_from).days
+    days = (date_to - date_from).days + 1
 
     absences += f'{year}/{fmonth}/{fday} to {year}/{tmonth}/{tday}    {days:<8}    {reason}\n'
 
