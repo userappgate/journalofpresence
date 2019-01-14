@@ -77,14 +77,17 @@ while True:
 
     fday, fmonth = [int(i) for i in from_.split('/')]
     tday, tmonth = [int(i) for i in to.split('/')]
+    month = datetime.datetime.now().month
     year = datetime.datetime.now().year
+    fyear = year - 1 if fmonth == 12 and month == 1 else year
+    tyear = year - 1 if tmonth == 12 and month == 1 else year
 
-    date_from = datetime.date(year, fmonth, fday)
-    date_to = datetime.date(year, tmonth, tday)
+    date_from = datetime.date(fyear, fmonth, fday)
+    date_to = datetime.date(tyear, tmonth, tday)
 
     days = (date_to - date_from).days + 1
 
-    absences += f'{year}/{fmonth:02}/{fday:02} to {year}/{tmonth:02}/{tday:02}    {days:<8}    {reason}\n'
+    absences += f'{fyear}/{fmonth:02}/{fday:02} to {tyear}/{tmonth:02}/{tday:02}    {days:<8}    {reason}\n'
 
 name = input('Full name: ')
 
