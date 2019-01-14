@@ -73,7 +73,7 @@ while True:
     if not from_:
         break
     to = input('To (dd/mm): ')
-    reason = input('Reason: ')
+    reason = input('Reason: ').upper()
 
     fday, fmonth = [int(i) for i in from_.split('/')]
     tday, tmonth = [int(i) for i in to.split('/')]
