@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 import datetime
+import os
+import pwd
 import subprocess
 
 template='''
@@ -89,7 +91,7 @@ while True:
 
     absences += f'{fyear}/{fmonth:02}/{fday:02} to {tyear}/{tmonth:02}/{tday:02}    {days:<8}    {reason}\n'
 
-name = input('Full name: ')
+name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(',', 1)[0]
 
 jop = template.format(
     year=datetime.datetime.now().year,
