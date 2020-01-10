@@ -79,7 +79,7 @@ while True:
 
     fday, fmonth = [int(i) for i in from_.split('/')]
     tday, tmonth = [int(i) for i in to.split('/')]
-    month = datetime.datetime.now().month
+    month = datetime.datetime.now().month +1
     year = datetime.datetime.now().year
     fyear = year - 1 if fmonth == 12 and month == 1 else year
     tyear = year - 1 if tmonth == 12 and month == 1 else year
