@@ -33,7 +33,7 @@ while True:
 
     fday, fmonth = [int(i) for i in from_.split('/')]
     tday, tmonth = [int(i) for i in to.split('/')]
-    month = datetime.datetime.now().month +1
+    month = datetime.datetime.now().month
     year = datetime.datetime.now().year
     fyear = year - 1 if fmonth == 12 and month == 1 else year
     tyear = year - 1 if tmonth == 12 and month == 1 else year
@@ -60,6 +60,7 @@ jop = template.format(
     cmonth=months[datetime.datetime.now().month - 1],
     pmonth=months[datetime.datetime.now().month - 2],
     employee_number='??',
+    all_presence=all_presence,
     name=name,
     table_from=table_from,
     table_to=table_to,
