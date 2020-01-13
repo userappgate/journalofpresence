@@ -76,7 +76,7 @@ print('Signing journal of presence file…')
 subprocess.check_call(['gpg', '--armour', '--sign', jopfile])
 
 print(f'JOP stored in {jopfile}')
-#toprint = input('Do you want to print it? (y/N)')
+open_in_browser = input('Do you want to open it? (y/N)')
 
-#if toprint.lower().startswith('y'):
-    #subprocess.check_call(['lpr', jopfile])
+if open_in_browser.lower().startswith('y'):
+    subprocess.check_call(['falkon', jopfile], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
