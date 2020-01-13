@@ -3,64 +3,10 @@ import datetime
 import os
 import pwd
 import subprocess
-
-template='''
-===========================================================
-|                                                         |
-|                    JOURNAL OF PRESENCE                  |
-|                                                         |
-===========================================================
-
-| Company      | Year   | Period           |
---------------------------------------------
-|              |        |                  |
-| Cryptzone AB | {year:>4}   | 16-{pmonth:<3} to 15-{cmonth:<3} |
-|              |        |                  |
---------------------------------------------
-| Name                                     |
---------------------------------------------
-|                                          |
-| {name:<41}|
-|                                          |
---------------------------------------------
-| All presence | No of empl |
------------------------------
-|              |            |
-|      {all_presence:<1}       |  {employee_number:<4}      |
-|              |            |
------------------------------
-
-===========================================================
-|                                                         |
-|                   JOURNAL OF ABSENCE                    |
-|                                                         |
-===========================================================
-
- Date                       Days        Reason
------------------------------------------------------------
-{absences}
-
------------------------------------------------------------
-Reasons of absence          |  Signature of Employee      |
------------------------------------------------------------
-A: Vacation                 |                             |
-B: Sickness                 |                             |
-C: Caring of a sick child   |                             |
-D: Absence without pay      |                             |
-E: Other reason             |                             |
-----------------------------|------------------------------
-                        | Signature of management leader  |
-                        |                                 |
-                        |                                 |
-                        |                                 |
-                        |                                 |
-                        |---------------------------------|
-'''
+from itertools import repeat
 
 months=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-
-absences = ''
 
 print('''
 A: Vacation
@@ -70,10 +16,18 @@ D: Absence without pay
 E: Other reason
 ''')
 
+table_from = list(repeat('' ,10))
+table_to = list(repeat('' ,10))
+table_duration = list(repeat('' ,10))
+table_reason = list(repeat('' ,10))
+
+index = 0
+all_presence = '✔'
 while True:
     from_ = input('From (dd/mm): ')
     if not from_:
         break
+    all_presence = ''
     to = input('To (dd/mm): ')
     reason = input('Reason: ').upper()
 
@@ -89,29 +43,39 @@ while True:
 
     days = (date_to - date_from).days + 1
 
-    absences += f'{fyear}/{fmonth:02}/{fday:02} to {tyear}/{tmonth:02}/{tday:02}    {days:<8}    {reason}\n'
+    table_from[index] = f'{fyear}/{fmonth:02}/{fday:02}'
+    table_to[index] = f'{tyear}/{tmonth:02}/{tday:02}'
+    table_duration[index] = f'{days}'
+    table_reason[index] = f'{reason}'
+
+    index += 1
 
 name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(',', 1)[0]
+
+with open('template.html', 'rt') as f:
+    template = f.read()
 
 jop = template.format(
     year=datetime.datetime.now().year,
     cmonth=months[datetime.datetime.now().month - 1],
     pmonth=months[datetime.datetime.now().month - 2],
     employee_number='??',
-    all_presence = ' ' if absences else '✔',
     name=name,
-    absences=absences,
+    table_from=table_from,
+    table_to=table_to,
+    table_duration=table_duration,
+    table_reason=table_reason,
 )
 
-jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.txt'
+jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.html'
 with open(jopfile, 'wt') as f:
     f.write(jop)
-print(jop)
 
 print('Signing journal of presence file…')
 subprocess.check_call(['gpg', '--armour', '--sign', jopfile])
 
-toprint = input('Do you want to print it? (y/N)')
+print(f'JOP stored in {jopfile}')
+#toprint = input('Do you want to print it? (y/N)')
 
-if toprint.lower().startswith('y'):
-    subprocess.check_call(['lpr', jopfile])
+#if toprint.lower().startswith('y'):
+    #subprocess.check_call(['lpr', jopfile])
