@@ -68,15 +68,30 @@ jop = template.format(
     table_reason=table_reason,
 )
 
-jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.html'
-with open(jopfile, 'wt') as f:
+# Create HTML file
+print('Generating…')
+htmlfile = 'jop-' + str(datetime.datetime.now().date()) + '.html'
+with open(htmlfile, 'wt') as f:
     f.write(jop)
+
+# Convert it to pdf using chromium
+print('Converting to pdf…')
+subprocess.check_call([
+    '/usr/bin/chromium', # Full path or it starts with firejail
+    '--no-sandbox',
+    '--headless',
+    '--disable-gpu',
+    '--print-to-pdf',
+    htmlfile
+])
+jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.pdf'
+os.rename('output.pdf', jopfile)
 
 print('Signing journal of presence file…')
 subprocess.check_call(['gpg', '--armour', '--sign', jopfile])
 
 print(f'JOP stored in {jopfile}')
-open_in_browser = input('Do you want to open it? (y/N)')
+open_in_viewer = input('Do you want to open it? (y/N)')
 
-if open_in_browser.lower().startswith('y'):
-    subprocess.check_call(['falkon', jopfile], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+if open_in_viewer.lower().startswith('y'):
+    subprocess.check_call(['okular', jopfile], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
