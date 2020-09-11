@@ -86,6 +86,7 @@ subprocess.check_call([
 ])
 jopfile = 'jop-' + str(datetime.datetime.now().date()) + '.pdf'
 os.rename('output.pdf', jopfile)
+os.unlink(htmlfile)
 
 print('Signing journal of presence file…')
 subprocess.check_call(['gpg', '--armour', '--sign', jopfile])
