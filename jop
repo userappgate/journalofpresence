@@ -89,7 +89,7 @@ os.rename('output.pdf', jopfile)
 os.unlink(htmlfile)
 
 print('Signing journal of presence file…')
-subprocess.check_call(['gpg', '--armour', '--output', jopfile + '.asc', '--detatch-sign', jopfile])
+subprocess.check_call(['gpg', '--armour', '--output', jopfile + '.asc', '--detach-sign', jopfile])
 
 print(f'JOP stored in {jopfile}')
 open_in_viewer = input('Do you want to open it? (y/N)')
