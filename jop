@@ -22,7 +22,7 @@ table_duration = list(repeat('' ,10))
 table_reason = list(repeat('' ,10))
 
 index = 0
-all_presence = '✔'
+all_presence = 'YES'
 while True:
     from_ = input('From (dd/mm): ')
     if not from_:
