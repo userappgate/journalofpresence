@@ -59,6 +59,7 @@ jop = template.format(
     year=datetime.datetime.now().year,
     cmonth=months[datetime.datetime.now().month - 1],
     pmonth=months[datetime.datetime.now().month - 2],
+    current_month_number=datetime.datetime.now().month,
     employee_number='SW0020',
     all_presence=all_presence,
     name=name,
