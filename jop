@@ -55,11 +55,15 @@ name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(',', 1)[0]
 with open('template.html', 'rt') as f:
     template = f.read()
 
+current_month_number = datetime.datetime.now().month if datetime.datetime.now().day <= 16 else datetime.datetime.now().month + 1
+cmonth = months[current_month_number - 1]
+pmonth = months[current_month_number - 2]
+
 jop = template.format(
     year=datetime.datetime.now().year,
-    cmonth=months[datetime.datetime.now().month - 1],
-    pmonth=months[datetime.datetime.now().month - 2],
-    current_month_number=datetime.datetime.now().month,
+    cmonth=cmonth,
+    pmonth=pmonth,
+    current_month_number=current_month_number,
     employee_number='SW0020',
     all_presence=all_presence,
     name=name,
