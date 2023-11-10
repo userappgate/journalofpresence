@@ -101,3 +101,14 @@ open_in_viewer = input('Do you want to open it? (y/N)')
 
 if open_in_viewer.lower().startswith('y'):
     subprocess.check_call(['okular', jopfile], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+send = input('Do you want to send it to Thomas? (y/N)')
+if send.lower().startswith('y'):
+    pipe = os.pipe()
+    rfile = os.fdopen(pipe[0], mode='r')
+    wfile = os.fdopen(pipe[1], mode='w')
+    wfile.write("Ack?")
+    wfile.close()
+    subprocess.check_call(['lsi-send', '-F', jopfile, 'thomas.cellerier'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.check_call(['lsi-send', '-F', jopfile + '.asc', 'thomas.cellerier'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.check_call(['lsi-write', 'thomas.cellerier'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=rfile)
