@@ -104,11 +104,11 @@ if open_in_viewer.lower().startswith('y'):
 
 send = input('Do you want to send it to Masaya? (y/N)')
 if send.lower().startswith('y'):
-    pipe = os.pipe()
-    rfile = os.fdopen(pipe[0], mode='r')
-    wfile = os.fdopen(pipe[1], mode='w')
-    wfile.write("Ack?")
-    wfile.close()
-    subprocess.check_call(['lsi-send', '-F', jopfile, 'masaya.ando'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.check_call(['lsi-send', '-F', jopfile + '.asc', 'masaya.ando'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.check_call(['lsi-write', 'masaya.ando'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=rfile)
+    subprocess.check_call([
+        'kmail',
+        'masaya.ando@appgate.com',
+        'camilla.sylven@appgate.com',
+        '-s', 'Journal of presence',
+        '--body', 'I attach my journal of presence. Please acknowledge reception\nThanks',
+        '--attach', jopfile, jopfile + '.asc'
+    ])
