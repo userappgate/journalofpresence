@@ -14,3 +14,4 @@ Requirements
 * python3.8
 * chromium
 * kmail
+* gpg
