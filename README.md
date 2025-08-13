@@ -13,5 +13,4 @@ Requirements
 
 * python3.8
 * chromium
-* gpg
-* localslackirc
+* kmail
